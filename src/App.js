@@ -1,4 +1,4 @@
-
+import Swal from 'sweetalert2';
 import { useState } from 'react';
 import Header from './components/Header';
 import Form from './components/Form';
@@ -19,10 +19,18 @@ const App = () => {
   };
   
   function handleDeleteAll() {
-    const confirmedit = window.confirm(
-      "are sure you wnat to delete all the items "
-    );
-    if (confirmedit) setItems([]);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to clear all items?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, clear it!',
+      cancelButtonText: 'No, keep it',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setItems([]);
+      }
+    });
   }
 
   function handleToggleItmes(id) {
