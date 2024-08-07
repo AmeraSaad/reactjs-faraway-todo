@@ -25,7 +25,7 @@ function ItemList({ items, onDelete, onToggleItems, onDeleteAllItems}) {
       {sortedItemes.map((item) => (
         <Item
           item={item}
-          onDeleteItems={onDelete}
+          onDelete={onDelete}
           onToggleItems={onToggleItems}
           key={item.id}
         />

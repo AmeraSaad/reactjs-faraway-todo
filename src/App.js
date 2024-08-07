@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { useState } from 'react';
+import { useState ,useEffect } from 'react';
 import Header from './components/Header';
 import Form from './components/Form';
 import ItemList from './components/ItemList';
@@ -8,14 +8,32 @@ import "./styles.css"
 import Footer from './components/Footer';
 
 const App = () => {
+
   const [items, setItems] = useState([]);
 
-  const handleAddItem = (item) => {
-    setItems([...items, item]);
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem('items'));
+    if (storedItems) {
+      setItems(storedItems);
+    }
+  }, []);
+
+  const saveItemsToLocalStorage = (items) => {
+    localStorage.setItem('items', JSON.stringify(items));
   };
 
-  const handleDeleteItem = (index) => {
-    setItems(items.filter((_, i) => i !== index));
+  const handleAddItem = (item) => {
+    // setItems([...items, item]);
+    const newItems = [...items, item];
+    setItems(newItems);
+    saveItemsToLocalStorage(newItems);
+  };
+
+  const handleDeleteItem = (id) => {
+    // setItems(items.filter((_, i) => i !== index));
+    const newItems = items.filter((item) => item.id !== id);
+    setItems(newItems);
+    saveItemsToLocalStorage(newItems);
   };
   
   function handleDeleteAll() {
@@ -29,16 +47,22 @@ const App = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         setItems([]);
+        saveItemsToLocalStorage([]);
       }
     });
   }
 
   function handleToggleItmes(id) {
-    setItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, packed: !item.packed } : item
-      )
+    // setItems((items) =>
+    //   items.map((item) =>
+    //     item.id === id ? { ...item, packed: !item.packed } : item
+    //   )
+    // );
+    const newItems = items.map((item) =>
+      item.id === id ? { ...item, packed: !item.packed } : item
     );
+    setItems(newItems);
+    saveItemsToLocalStorage(newItems);
   }
 
   return (
